@@ -1,0 +1,139 @@
+<html>
+	<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<style data-merge-styles="true"></style>
+    <title>JavaScript DH Key Exchange Demo</title>
+	<style>
+		input { min-width: 600px; }
+	</style>
+<script type="text/javascript" src="./js/jquery-1.11.1-min.js"></script>
+<script type="text/javascript" src="./cryptojs/dh/jsbn.js"></script>
+<script type="text/javascript" src="./cryptojs/dh/jsbn2.js"></script>
+<script type ="text/javascript" src="./cryptojs/rollups/aes.js"></script>
+<script type ="text/javascript" src="./cryptojs/rollups/sha256.js"></script>
+<script type ="text/javascript" src="./cryptojs/components/mode-ecb.js"></script>
+<script type ="text/javascript" src="./js/dh.js"></script>
+
+<script>
+const dh = new DH();
+function init() {
+	AK.value = dh.privateKey;
+	console.log("dh",dh);
+	console.log("dh",JSON.stringify(dh));
+}
+function reqpg() {
+	dh.requestGenerator(function() {
+		PV.value = dh.prime;
+		GV.value = dh.generator;
+		BP.value = dh.otherPublicKey;
+		AP.value = dh.publicKey;
+		AS.value = dh.sharedKey;
+		console.log("dh",dh);
+		console.log("dh",JSON.stringify(dh));		
+		dh.submitPublicKey();
+	});
+}
+function submitpk() {
+	dh.submitPublicKey();
+}
+function do_encrypt_text() {
+	let plaintext = PT.value;
+	var ciphertext = dh.encrypt(plaintext);
+	console.log('ciphertext: ', ciphertext);
+	var decryptedtext = dh.decrypt(ciphertext);
+	console.log('decryptedtext: ', decryptedtext);
+	ET.value = ciphertext;
+}
+function enctext() {
+	jQuery.ajax({
+		url: "/crypto/dh/encrypt",
+		type: "POST",
+		data: {
+			fsAjax: "true",
+			plaintext: PT.value
+		},
+		dataType: "json",
+		contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+		error : function(transport,status,errorThrown) {
+			alert(errorThrown);
+		},
+		success: function(data,status,transport){
+			console.log(transport.responseText);
+			logtxt.value = transport.responseText;
+		}
+	});			
+}
+function dectext() {
+	jQuery.ajax({
+		url: "/crypto/dh/decrypt",
+		type: "POST",
+		data: {
+			fsAjax: "true",
+			ciphertext: ET.value
+		},
+		dataType: "json",
+		contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+		error : function(transport,status,errorThrown) {
+			alert(errorThrown);
+		},
+		success: function(data,status,transport){
+			console.log(transport.responseText);
+			logtxt.value = transport.responseText;
+		}
+	});			
+}
+
+</script>
+  </head>
+
+  <body onload="init()">
+    <h1>JavaScript DH Key Exchange Demo</h1>
+	<table>
+		<tr>
+			<td></td><td><button onclick="reqpg()">Request Prime &amp; Generator</button></td>
+		</tr>
+		<tr>
+			<td>Prime</td><td><input id="PV" value=""/></td><td></td>
+		</tr>
+		<tr>
+			<td>Generator</td><td><input id="GV" value=""/></td><td></td>
+		</tr>
+		<tr>
+			<td>Alice Key</td><td><input id="AK" value=""/></td><td></td>
+		</tr>
+		<tr>
+			<td>Alice Pub</td><td><input id="AP" value=""/></td><td></td>
+		</tr>
+		<tr>
+			<td>Bob Key</td><td><input id="BK" value=""/></td><td></td>
+		</tr>
+		<tr>
+			<td>Bob Pub</td><td><input id="BP" value=""/></td><td></td>
+		</tr>
+		<tr>
+			<td>Alice Share</td><td><input id="AS" value=""/></td><td></td>
+		</tr>
+		<tr>
+			<td>Bob Share</td><td><input id="BS" value=""/></td><td></td>
+		</tr>
+		<tr>
+			<td></td><td><button onclick="submitpk()">Submit Public Key</button></td>
+		</tr>
+		<tr>
+			<td>Plain Text</td><td><input id="PT" value="Hello World"/></td><td><button onclick="do_encrypt_text()">Encrypt</button></td>
+		</tr>
+		<tr>
+			<td></td><td><button onclick="enctext()">Submit Encrypt Text</button></td>
+		</tr>
+		<tr>
+			<td>Encrypt Text</td><td><input id="ET" value=""/></td><td></td>
+		</tr>
+		<tr>
+			<td></td><td><button onclick="dectext()">Submit Decrypt Text</button></td>
+		</tr>
+		<tr>
+			<td></td><td colspan="2"><textarea id="logtxt" cols="75" rows="8"></textarea></td>
+		</tr>
+	</table>
+  </body>
+ </html>
