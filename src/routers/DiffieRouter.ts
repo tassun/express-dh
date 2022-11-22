@@ -54,6 +54,7 @@ router.post('/dh/encrypt', urlencodedparser, async function(req: Request, res: R
     dh.otherPublicKey = diffie.otherPublicKey;
     let body: any = { };    
     if(dh && plaintext) {
+        body.plaintext = plaintext;
         let enctext = dh.encrypt(plaintext);
         console.log("encrypt text",enctext);
         body.ciphertext = enctext;
@@ -77,6 +78,7 @@ router.post('/dh/decrypt', urlencodedparser, async function(req: Request, res: R
     dh.otherPublicKey = diffie.otherPublicKey;
     let body: any = { };    
     if(dh && ciphertext) {
+        body.ciphertext = ciphertext;
         let dectext = dh.decrypt(ciphertext);
         console.log("decrypt text",dectext);
         body.plaintext = dectext;
