@@ -2,7 +2,7 @@
 import Axios from "axios";
 import { DH } from "will-dh";
 
-async function testJavaDiffie() {
+async function testDiffie() {
 	let url = "http://localhost:8080/ria/crypto/dh_c.jsp";
 	let enc_url = "http://localhost:8080/ria/crypto/dh_enc_c.jsp";
 	let dec_url = "http://localhost:8080/ria/crypto/dh_dec_c.jsp";
@@ -50,4 +50,4 @@ async function testJavaDiffie() {
     }
 
 }
-testJavaDiffie();
+testDiffie();

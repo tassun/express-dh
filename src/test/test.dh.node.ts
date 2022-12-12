@@ -2,7 +2,7 @@
 import Axios from "axios";
 import { DH } from "will-dh";
 
-async function testJavaDiffie() {
+async function testDiffie() {
 	let url = "http://localhost:8080/crypto/dh";
 	let enc_url = "http://localhost:8080/crypto/dh/encrypt";
 	let dec_url = "http://localhost:8080/crypto/dh/decrypt";
@@ -50,4 +50,4 @@ async function testJavaDiffie() {
     }
 
 }
-testJavaDiffie();
+testDiffie();
