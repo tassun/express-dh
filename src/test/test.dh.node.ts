@@ -40,12 +40,18 @@ async function testDiffie() {
             (res:any) => res.data
         );	
         console.log("enc_data",enc_data);
+        let cipher_data = enc_data.body.ciphertext;
+        let raw_data = dh.decrypt(cipher_data);
+        console.log("raw data",raw_data);
 
         params = new URLSearchParams({ciphertext: encmsg});        
         const dec_data = await inst.post(dec_url,params).then(
             (res:any) => res.data
         );	
         console.log("dec_data",dec_data);
+        let cipher_text = dec_data.body.ciphertext;
+        let raw_text = dh.decrypt(cipher_text);
+        console.log("raw data",raw_text);
 
     }
 
